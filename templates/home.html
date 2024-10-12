@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>All Posts</h1>
+    <a href="{{ url_for('makelisting') }}">Make a new listing</a>
+    <ul>
+    {% for post in posts %}
+        <li>
+            <h2>{{ post.title }}</h2>
+            <p>Price: ${{ post.price }}</p>
+            <img src="{{ url_for('static', filename='uploads/' + post.image_filename) }}" alt="Post Image" width="200">
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
