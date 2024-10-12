@@ -15,12 +15,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Initialize database
 db = SQLAlchemy(app)
 
-# Model for Post
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Float, nullable=False)
-    image_filename = db.Column(db.String(100), nullable=False)
+    image_filenames = db.Column(db.String(300), nullable=False)  # Changed from image_filename to image_filenames
+
 
 # Check if the database exists and create it if not
 def init_db():
@@ -51,19 +51,26 @@ def makelisting():
     if request.method == 'POST':
         title = request.form['title']
         price = request.form['price']
-        image = request.files['image']
+        images = request.files.getlist('images')  # Get list of uploaded images
 
-        if image and allowed_file(image.filename):
-            # Save the image
-            filename = image.filename
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        image_filenames = []
 
-            # Create new post and add to the database
-            new_post = Post(title=title, price=price, image_filename=filename)
-            db.session.add(new_post)
-            db.session.commit()
+        for image in images:
+            if image and allowed_file(image.filename):
+                # Save the image
+                filename = image.filename
+                image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                image_filenames.append(filename)
 
-            return redirect(url_for('home'))
+        # Join image filenames into a single string to store in the database
+        image_filenames_str = ','.join(image_filenames)
+
+        # Create new post and add to the database
+        new_post = Post(title=title, price=price, image_filenames=image_filenames_str)
+        db.session.add(new_post)
+        db.session.commit()
+
+        return redirect(url_for('home'))
 
     return render_template('makelisting.html')
 

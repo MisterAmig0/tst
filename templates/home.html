@@ -13,7 +13,11 @@
         <li>
             <h2>{{ post.title }}</h2>
             <p>Price: ${{ post.price }}</p>
-            <img src="{{ url_for('static', filename='uploads/' + post.image_filename) }}" alt="Post Image" width="200">
+
+            <!-- Split the image_filenames and display each image -->
+            {% for image_filename in post.image_filenames.split(',') %}
+                <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" alt="Post Image" width="200">
+            {% endfor %}
         </li>
     {% endfor %}
     </ul>
