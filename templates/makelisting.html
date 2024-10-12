@@ -4,19 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make a Listing</title>
+    <style>
+      
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <h1>Create a New Listing</h1>
-    <form action="{{ url_for('makelisting') }}" method="POST" enctype="multipart/form-data">
-        <label for="title">Title:</label>
-        <input type="text" name="title" required><br>
-        <label for="price">Price:</label>
-        <input type="text" name="price" required><br>
-        <label for="image">Upload Image:</label>
-        <input type="file" name="image" accept="image/*" required><br>
-        <button type="submit">Create Listing</button>
-    </form>
-    <a href="{{ url_for('home') }}">Back to Home</a>
+
+    <div class="container">
+        <h1>Create a New Listing</h1>
+
+        <!-- Tab Buttons -->
+        <div class="tab-buttons">
+            <button class="active" id="info-tab" onclick="showTab('info')">Information</button>
+            <button id="photo-tab" onclick="showTab('photo')">Photo Upload</button>
+        </div>
+
+        <!-- Form (action and method will be handled by Flask) -->
+        <form action="{{ url_for('makelisting') }}" method="POST" enctype="multipart/form-data">
+
+            <!-- Information Tab -->
+            <div id="info" class="tab-content active">
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" required>
+
+                <label for="price">Price:</label>
+                <input type="text" name="price" id="price" required>
+            </div>
+
+            <!-- Photo Upload Tab -->
+            <div id="photo" class="tab-content">
+                <label for="image">Upload Image:</label>
+                <input type="file" name="image" id="image" accept="image/*" required>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit">Create Listing</button>
+        </form>
+    </div>
+
+    <!-- JavaScript to toggle between tabs -->
+    <script>
+        function showTab(tab) {
+            // Hide all tab content
+            var tabs = document.getElementsByClassName('tab-content');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+
+            // Deactivate all tab buttons
+            var buttons = document.getElementsByClassName('tab-buttons')[0].getElementsByTagName('button');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+
+            // Show the selected tab content
+            document.getElementById(tab).classList.add('active');
+
+            // Activate the selected tab button
+            document.getElementById(tab + '-tab').classList.add('active');
+        }
+    </script>
+
 </body>
 </html>
-    
